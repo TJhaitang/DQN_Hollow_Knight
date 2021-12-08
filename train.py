@@ -92,15 +92,10 @@ def run_episode(hp, algorithm, agent, act_rmp_correct, move_rmp_correct, PASS_CO
         # 从agent中获取预测结果
         move, action = agent.sample(
             stations, soul, hornet_x, hornet_y, player_x, hornet_skill1)
-        # action = 0
         # threading.Thread(target=runDo, args=(
         #     move, action, player_x, hornet_x)).start()#开一个线程进行操作以避免操作本身占用些什么时间，但性能够好就无所谓（而且不好做线程之间的统筹
         take_direction(move)
-        # # print(step)
         take_action(action, player_x, hornet_x)  # 改了一下
-
-        # print(time.time() - start_time, " action: ", action_name[action])
-        # start_time = time.time()
         time.sleep(0.1)  # 等技能放出去了再判断reward，但这个时间到底要多久就不知道了，0.05基本就是无，又不敢放多了
         # 获取动作效果
         next_station = thread1.get_buffer()
@@ -108,17 +103,14 @@ def run_episode(hp, algorithm, agent, act_rmp_correct, move_rmp_correct, PASS_CO
         next_self_hp = hp.get_self_hp()
         next_player_x, next_player_y = hp.get_play_location()
         next_hornet_x, next_hornet_y = hp.get_hornet_location()
-        Nothing()  # 释放双手（为什么？
+        Nothing()  # 释放双手
 
         # 获取一下操作的收益并存起来，但这个放在这里会不会浪费性能，放在循环外会不会好一点
-        # actionreward可以大改
+        # actionreward可以调整以改变骑士的风格
         move_reward = Tool.Helper.move_judge(
             self_hp, next_self_hp, player_x, next_player_x, hornet_x, next_hornet_x, move, hornet_skill1)
-        # print(move_reward)
         act_reward, done = Tool.Helper.action_judge(
             boss_hp_value, next_boss_hp_value, self_hp, next_self_hp, next_player_x, next_hornet_x, next_hornet_x, action, hornet_skill1)
-        # print(reward)
-        # print( action_name[action], ", ", move_name[d], ", ", reward)
         # 存起来
         DelayMoveReward.append(move_reward)
         DelayActReward.append(act_reward)

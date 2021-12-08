@@ -61,9 +61,7 @@ def Turn_Right():
     ReleaseKey(RIGHT_ARROW)
 
 # ----------------------------------------------------------------------
-
-# other actions
-# Attack
+# action
 # 0
 
 
@@ -74,7 +72,7 @@ def Attack():
     # Nothing()
     time.sleep(0.01)
 # 1
-# def Attack_Down():
+# def Attack_Down():#下砍没有意义
 #     PressKey(DOWN_ARROW)
 #     PressKey(X)
 #     time.sleep(0.05)
@@ -122,7 +120,7 @@ def Mid_Jump():
 
 # Skill
 # 4
-# def Skill():
+# def Skill():#向前放技能太弱了
 #     PressKey(Z)
 #     PressKey(X)
 #     time.sleep(0.1)
@@ -174,9 +172,6 @@ def DoNothing():
     time.sleep(0.3)
 
 
-# Restart function
-# it restart a new game
-# it is not in actions space
 def Look_up():
     PressKey(UP_ARROW)
     time.sleep(0.1)
@@ -202,10 +197,7 @@ def restart():
         station = cv2.resize(cv2.cvtColor(grab_screen(
             station_size), cv2.COLOR_RGBA2RGB), (1000, 500))
         if station[187][612][0] > 200:
-            # PressKey(DOWN_ARROW)
-            # time.sleep(0.1)
-            # ReleaseKey(DOWN_ARROW)
-            PressKey(C)
+            PressKey(C)  # 判断到选择了第一个难度就按C进入游戏
             time.sleep(0.1)
             ReleaseKey(C)
             break
@@ -214,12 +206,10 @@ def restart():
             time.sleep(0.2)
 
 
-# List for action functions
 Actions = [Attack, Attack_Up,
            Short_Jump, Mid_Jump, Skill_Up,
            Skill_Down, Rush, DoNothing]  # 加入了DoNothing选项，有时候无为也是一种有为，而且乐得无为
 Directions = [Move_Left, Move_Right, Turn_Left, Turn_Right]
-# Run the action
 
 
 def take_action(action, playerx, hx):

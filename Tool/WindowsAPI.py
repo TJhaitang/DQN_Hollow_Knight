@@ -1,21 +1,20 @@
 import cv2
 import numpy as np
-import win32gui, win32ui, win32con, win32api
+import win32gui
+import win32ui
+import win32con
+import win32api
+
+hwnd = win32gui.FindWindow(None, 'Hollow Knight')
 
 
-
-# get hollow knight hwnd
-hwnd = win32gui.FindWindow(None,'Hollow Knight')
-
-# get windows image of hollow knight
-def grab_screen(region=None):
-  
+def grab_screen(region=None):  # 截图
 
     if region:
-            left,top,x2,y2 = region
-            width = x2 - left + 1
-            height = y2 - top + 1
-    else:
+        left, top, x2, y2 = region
+        width = x2 - left + 1
+        height = y2 - top + 1
+    else:  # else不到
         width = win32api.GetSystemMetrics(win32con.SM_CXVIRTUALSCREEN)
         height = win32api.GetSystemMetrics(win32con.SM_CYVIRTUALSCREEN)
         left = win32api.GetSystemMetrics(win32con.SM_XVIRTUALSCREEN)
@@ -24,14 +23,15 @@ def grab_screen(region=None):
     hwindc = win32gui.GetWindowDC(hwnd)
     srcdc = win32ui.CreateDCFromHandle(hwindc)
     memdc = srcdc.CreateCompatibleDC()
-    bmp = win32ui.CreateBitmap()
+    bmp = win32ui.CreateBitmap()  # 获取游戏窗口截图
+    # 对截图进行resize和拉伸
     bmp.CreateCompatibleBitmap(srcdc, width, height)
     memdc.SelectObject(bmp)
     memdc.BitBlt((0, 0), (width, height), srcdc, (left, top), win32con.SRCCOPY)
-    
+
     signedIntsArray = bmp.GetBitmapBits(True)
     img = np.fromstring(signedIntsArray, dtype='uint8')
-    img.shape = (height,width,4)
+    img.shape = (height, width, 4)
 
     srcdc.DeleteDC()
     memdc.DeleteDC()
@@ -39,17 +39,10 @@ def grab_screen(region=None):
     win32gui.DeleteObject(bmp.GetHandle())
 
     return img
-  
 
-# win32 presskey and releasekey, but it has lag, what we need is in SendKey.py
-def PressKey( hexKeyCode):
-    win32api.keybd_event(hexKeyCode, 0, win32con.KEYEVENTF_EXTENDEDKEY, 0)
+# 检查按键按下
 
 
-def ReleaseKey( hexKeyCode):
-    win32api.keybd_event(hexKeyCode, 0, win32con.KEYEVENTF_KEYUP, 0)
-
-# check which key is pressed
 def key_check():
     operations = []
     if win32api.GetAsyncKeyState(0x41):

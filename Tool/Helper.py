@@ -1,7 +1,7 @@
 from Tool.WindowsAPI import key_check
 import time
 
-# get mean score of a reward seq
+# 一些计算操作得分的方法
 
 
 def mean(d):
@@ -10,15 +10,11 @@ def mean(d):
         t += i
     return t / len(d)
 
-# count play hp change, and give reward
-
 
 def count_self_reward(next_self_blood, self_hp):
     if next_self_blood - self_hp < 0:
         return 11 * (next_self_blood - self_hp)
     return 0
-
-# count boss hp change, and give reward
 
 
 def count_boss_reward(next_boss_blood, boss_blood, action):
@@ -72,9 +68,7 @@ def move_judge(self_blood, next_self_blood, player_x, next_player_x, hornet_x, n
     #     return reward
 
     if hornet_skill1:
-        # run away while distance < 5
         if abs(player_x - hornet_x) < 6:
-            # change direction while hornet use skill
             if move == 0 or move == 2:
                 dire = 1
             else:
@@ -83,10 +77,8 @@ def move_judge(self_blood, next_self_blood, player_x, next_player_x, hornet_x, n
                 s = -1
             else:
                 s = 1
-            # if direction is correct and use long move
             if dire * s == 1 and move < 2:
                 return 10
-        # do not do long move while distance > 5
         else:
             if move >= 2:
                 return 10
@@ -141,8 +133,6 @@ def act_distance_reward(action, next_player_x, next_hornet_x, next_hornet_y):
             distance_reward += 1
     return distance_reward
 
-# JUDGEMENT FUNCTION, write yourself
-
 
 def action_judge(boss_blood, next_boss_blood, self_blood, next_self_blood, next_player_x, next_hornet_x, next_hornet_y, action, hornet_skill1):
     # Player dead
@@ -159,10 +149,8 @@ def action_judge(boss_blood, next_boss_blood, self_blood, next_self_blood, next_
     #     reward *= 1.5
     if next_self_blood <= 0 and self_blood != 9:
         done = 1
-    # boss dead
     elif next_boss_blood <= 0 or next_boss_blood > 900:
         done = 2
-    # playing
     else:
         done = 0
     return reward, done
@@ -179,7 +167,6 @@ def move_judge(self_blood, next_self_blood, player_x, next_player_x, hornet_x, n
     if hornet_skill1:
         # run away while distance < 5
         if abs(player_x - hornet_x) < 6:
-            # change direction while hornet use skill
             if move == 0 or move == 2:
                 dire = 1
             else:
@@ -188,10 +175,8 @@ def move_judge(self_blood, next_self_blood, player_x, next_player_x, hornet_x, n
                 s = -1
             else:
                 s = 1
-            # if direction is correct and use long move
             if dire * s == 1 and move < 2:
                 return 10
-        # do not do long move while distance > 5
         else:
             if move >= 2:
                 return 10
@@ -216,7 +201,7 @@ def move_judge(self_blood, next_self_blood, player_x, next_player_x, hornet_x, n
     return -10
 
 
-def pause_game(paused):
+def pause_game(paused):  # 想在训练中暂停，但没用到
     op, d = key_check()
     if 'T' in op:
         if paused:
@@ -231,7 +216,6 @@ def pause_game(paused):
         print('paused')
         while True:
             op, d = key_check()
-            # pauses game and can get annoying.
             if 'T' in op:
                 if paused:
                     paused = False

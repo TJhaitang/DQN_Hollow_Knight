@@ -37,7 +37,7 @@ class Hp_getter():
             r"C:\\Windows\\System32\\kernel32.dll")
         self.check = 0
         self.hx = 0
-        # get dll address
+        # 获取全部进程地址
         hProcess = Kernel32.OpenProcess(
             PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
             False, pid)
@@ -56,6 +56,7 @@ class Hp_getter():
         self.load_self_hp_address()
         self.load_souls_address()
 
+    # 通过base_address和offset_list获取一个内存地址
     def load_address_from(self, base_address, offset_list):
         offset_address = ctypes.c_ulonglong()
         self.kernal32.ReadProcessMemory(
@@ -65,7 +66,7 @@ class Hp_getter():
                 self.process_handle), ctypes.c_void_p(offset_address.value + offset), ctypes.byref(offset_address), 4, None)
         return offset_address.value+offset_list[-1]
 
-    def get_num_from(self, address):
+    def get_num_from(self, address):  # 在内存地址里面取数
         offset_address = ctypes.c_long()
         self.kernal32.ReadProcessMemory(int(
             self.process_handle), ctypes.c_void_p(address), ctypes.byref(offset_address), 4, None)
@@ -111,7 +112,8 @@ class Hp_getter():
         self.boss_y_address = self.load_address_from(
             base_address, y_offset_list)
 
-    def get_souls(self):  # 没有做安全性检查！！！！
+# 没有做安全性检查，不过训练的时候没出过问题所以阿弥陀佛
+    def get_souls(self):
         return self.get_num_from(self.souls_address)
 
     def get_self_hp(self):
